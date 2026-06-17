@@ -86,16 +86,16 @@ Layered Architecture
 
 Project Structure
 com.taskflow
-├── controller
-├── service
-├── repository
-├── dto
-├── entity
-├── exception
-├── config
-├── oop
-├── solid
-└── modernjava
+  controller
+  service
+  repository
+  dto
+  entity
+  exception
+  config
+  oop
+  solid
+  modernjava
 
 
 Implementations
