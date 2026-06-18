@@ -137,6 +137,21 @@ Spring Validation
 Lombok
 Git & GitHub
 
+Day 4 – REST API Design, Controllers, Services & DTOs
+
+Implemented a Task Management REST API using Spring Boot.
+Created a layered architecture with Controller, Service, DTO, and Entity classes.
+Developed a `Task` entity to represent task data.
+Created DTOs for request and response handling.
+Implemented `TaskService` to manage task operations using in-memory storage.
+Developed `TaskController` exposing REST endpoints for CRUD operations.
+Added the following endpoints:
+  * `GET /api/tasks` – Retrieve all tasks
+  * `GET /api/tasks/{id}` – Retrieve a task by ID
+  * `POST /api/tasks` – Create a new task
+  * `PUT /api/tasks/{id}` – Update an existing task
+  * `DELETE /api/tasks/{id}` – Delete a task
+Successfully ran and tested the application locally on port 8080.
 
 ## Author
 
