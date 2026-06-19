@@ -153,6 +153,26 @@ Added the following endpoints:
   * `DELETE /api/tasks/{id}` – Delete a task
 Successfully ran and tested the application locally on port 8080.
 
+Day 5 - Database Integration with Spring Data JPA & PostgreSQL
+
+Completed
+- Configured PostgreSQL datasource in Spring Boot
+- Added Spring Data JPA and Hibernate
+- Converted Task to a JPA Entity
+- Created User and Project entities
+- Implemented entity relationships:
+  - User (1:N) Task
+  - Project (1:N) Task
+- Created TaskRepository, UserRepository, and ProjectRepository
+- Replaced in-memory storage with PostgreSQL persistence
+- Verified CRUD operations using PostgreSQL database
+
+Technologies Used
+- Spring Boot
+- Spring Data JPA
+- Hibernate
+- PostgreSQL
+
 ## Author
 
 Sanjali Reddy
