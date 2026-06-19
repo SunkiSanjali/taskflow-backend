@@ -1,62 +1,53 @@
 package com.taskflow.service;
 
 import com.taskflow.entity.Task;
+import com.taskflow.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class TaskService {
 
-    private final List<Task> tasks = new ArrayList<>();
+    private final TaskRepository taskRepository;
+
+    public TaskService(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
 
     public Task createTask(Task task) {
-        tasks.add(task);
-        return task;
+        return taskRepository.save(task);
     }
 
     public List<Task> getAllTasks() {
-        return tasks;
+        return taskRepository.findAll();
     }
 
     public Task getTaskById(Long id) {
-
-        for (Task task : tasks) {
-            if (task.getId().equals(id)) {
-                return task;
-            }
-        }
-
-        return null;
+        return taskRepository.findById(id).orElse(null);
     }
 
     public Task updateTask(Long id, Task updatedTask) {
 
-        for (Task task : tasks) {
+        Task existingTask = taskRepository.findById(id).orElse(null);
 
-            if (task.getId().equals(id)) {
-
-                task.setTitle(updatedTask.getTitle());
-                task.setDescription(updatedTask.getDescription());
-                task.setStatus(updatedTask.getStatus());
-                task.setPriority(updatedTask.getPriority());
-
-                return task;
-            }
+        if (existingTask == null) {
+            return null;
         }
 
-        return null;
+        existingTask.setTitle(updatedTask.getTitle());
+        existingTask.setDescription(updatedTask.getDescription());
+        existingTask.setStatus(updatedTask.getStatus());
+        existingTask.setPriority(updatedTask.getPriority());
+
+        return taskRepository.save(existingTask);
     }
 
     public boolean deleteTask(Long id) {
 
-        for (Task task : tasks) {
-
-            if (task.getId().equals(id)) {
-                tasks.remove(task);
-                return true;
-            }
+        if (taskRepository.existsById(id)) {
+            taskRepository.deleteById(id);
+            return true;
         }
 
         return false;
