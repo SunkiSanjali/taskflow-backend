@@ -155,7 +155,6 @@ Successfully ran and tested the application locally on port 8080.
 
 Day 5 - Database Integration with Spring Data JPA & PostgreSQL
 
-Completed
 - Configured PostgreSQL datasource in Spring Boot
 - Added Spring Data JPA and Hibernate
 - Converted Task to a JPA Entity
@@ -172,6 +171,15 @@ Technologies Used
 - Spring Data JPA
 - Hibernate
 - PostgreSQL
+
+Day 6 - Flyway, Pagination & Filtering
+
+- Added Flyway for database migrations
+- Created and executed SQL migration scripts
+- Implemented pagination in task APIs
+- Added filtering by status, priority, and keywords
+- Improved repository and service layer for dynamic queries
+
 
 ## Author
 
