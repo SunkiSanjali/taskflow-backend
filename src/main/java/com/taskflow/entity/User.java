@@ -15,7 +15,7 @@ public class User {
 
     private String email;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "assignee")
     private List<Task> tasks;
 
     public User() {

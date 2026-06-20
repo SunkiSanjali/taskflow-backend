@@ -27,8 +27,8 @@ public class Task {
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "assignee_id")
+    private User assignee;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
@@ -101,12 +101,12 @@ public class Task {
         this.updatedAt = updatedAt;
     }
 
-    public User getUser() {
-        return user;
+    public User getAssignee() {
+        return assignee;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
     }
 
     public Project getProject() {
