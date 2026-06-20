@@ -2,9 +2,11 @@ package com.taskflow.service;
 
 import com.taskflow.entity.Task;
 import com.taskflow.repository.TaskRepository;
+import com.taskflow.specification.TaskSpecification;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class TaskService {
@@ -15,41 +17,21 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-    public Task createTask(Task task) {
-        return taskRepository.save(task);
+    public Page<Task> getAllTasks(Pageable pageable) {
+        return taskRepository.findAll(pageable);
     }
 
-    public List<Task> getAllTasks() {
-        return taskRepository.findAll();
-    }
+    public Page<Task> getFilteredTasks(
+            String status,
+            String priority,
+            Long assigneeId,
+            Pageable pageable) {
 
-    public Task getTaskById(Long id) {
-        return taskRepository.findById(id).orElse(null);
-    }
+        Specification<Task> spec =
+                Specification.where(TaskSpecification.hasStatus(status))
+                        .and(TaskSpecification.hasPriority(priority))
+                        .and(TaskSpecification.hasAssignee(assigneeId));
 
-    public Task updateTask(Long id, Task updatedTask) {
-
-        Task existingTask = taskRepository.findById(id).orElse(null);
-
-        if (existingTask == null) {
-            return null;
-        }
-
-        existingTask.setTitle(updatedTask.getTitle());
-        existingTask.setDescription(updatedTask.getDescription());
-        existingTask.setStatus(updatedTask.getStatus());
-        existingTask.setPriority(updatedTask.getPriority());
-
-        return taskRepository.save(existingTask);
-    }
-
-    public boolean deleteTask(Long id) {
-
-        if (taskRepository.existsById(id)) {
-            taskRepository.deleteById(id);
-            return true;
-        }
-
-        return false;
+        return taskRepository.findAll(spec, pageable);
     }
 }
