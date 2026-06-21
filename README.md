@@ -180,6 +180,46 @@ Day 6 - Flyway, Pagination & Filtering
 - Added filtering by status, priority, and keywords
 - Improved repository and service layer for dynamic queries
 
+You can add this concise **Day 7** section to your README:
+
+Day 7 – Validation, Exception Handling & API Standards
+
+Features Implemented
+* Added request validation using Bean Validation annotations (`@NotBlank`, `@Size`, etc.)
+* Created custom exceptions:
+  * `ResourceNotFoundException`
+  * `DuplicateResourceException`
+  * `BadRequestException`
+* Implemented centralized exception handling using `@RestControllerAdvice`
+* Standardized API error responses with:
+  * timestamp
+  * status
+  * error
+  * message
+  * path
+  * field-level validation errors
+* Introduced API versioning with `/api/v1` endpoint prefix
+* Tested validation and exception scenarios using Postman
+
+Sample Error Response
+
+```json
+{
+  "timestamp": "2026-06-21T15:33:42.2708172",
+  "status": 404,
+  "error": "Not Found",
+  "message": "Task not found",
+  "path": "/api/v1/tasks/test-not-found"
+}
+```
+
+APIs Tested
+
+```http
+GET    /api/v1/tasks
+POST   /api/v1/tasks
+GET    /api/v1/tasks/test-not-found
+```
 
 ## Author
 
