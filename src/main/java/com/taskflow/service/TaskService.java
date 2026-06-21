@@ -1,5 +1,6 @@
 package com.taskflow.service;
 
+import com.taskflow.dto.CreateTaskRequest;
 import com.taskflow.entity.Task;
 import com.taskflow.repository.TaskRepository;
 import com.taskflow.specification.TaskSpecification;
@@ -33,5 +34,18 @@ public class TaskService {
                         .and(TaskSpecification.hasAssignee(assigneeId));
 
         return taskRepository.findAll(spec, pageable);
+    }
+
+    public Task createTask(CreateTaskRequest request) {
+
+        Task task = new Task();
+
+        task.setTitle(request.title());
+        task.setDescription(request.description());
+        task.setPriority(request.priority());
+
+        task.setStatus("OPEN");
+
+        return taskRepository.save(task);
     }
 }
