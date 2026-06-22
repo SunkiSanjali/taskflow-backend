@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import com.taskflow.exception.ResourceNotFoundException;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api/v1/tasks")
@@ -57,5 +58,16 @@ public class TaskController {
     @GetMapping("/test-not-found")
     public void testNotFound() {
         throw new ResourceNotFoundException("Task not found");
+    }
+
+    @GetMapping("/secure")
+    public String secureEndpoint() {
+        return "Protected Endpoint";
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    public String deleteTask(@PathVariable Long id) {
+        return "Task deleted";
     }
 }
