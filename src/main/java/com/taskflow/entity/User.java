@@ -52,4 +52,24 @@ public class User {
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    private String password;
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
