@@ -43,9 +43,33 @@ public class TaskService {
         task.setTitle(request.title());
         task.setDescription(request.description());
         task.setPriority(request.priority());
-
         task.setStatus("OPEN");
 
         return taskRepository.save(task);
+    }
+
+    public Task getTaskById(Long id) {
+
+        return taskRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Task not found"));
+    }
+
+    public Task updateTask(Long id, CreateTaskRequest request) {
+
+        Task task = getTaskById(id);
+
+        task.setTitle(request.title());
+        task.setDescription(request.description());
+        task.setPriority(request.priority());
+
+        return taskRepository.save(task);
+    }
+
+    public void deleteTask(Long id) {
+
+        Task task = getTaskById(id);
+
+        taskRepository.delete(task);
     }
 }
