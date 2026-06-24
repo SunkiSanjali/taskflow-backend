@@ -64,10 +64,7 @@ public class TaskController {
     public String secureEndpoint() {
         return "Protected Endpoint";
     }
+    
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
-    public String deleteTask(@PathVariable Long id) {
-        return "Task deleted";
-    }
+
 }

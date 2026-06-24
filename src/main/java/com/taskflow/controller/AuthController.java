@@ -30,26 +30,25 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(
-            @RequestBody RegisterRequest request
-    ) {
+    public String register(@RequestBody RegisterRequest request) {
 
         if (userRepository.existsByEmail(request.email())) {
             return "Email already exists";
         }
 
         User user = new User();
-
         user.setName(request.name());
         user.setEmail(request.email());
 
-        user.setPassword(
-                passwordEncoder.encode(request.password())
-        );
+        user.setPassword(passwordEncoder.encode(request.password()));
 
-        user.setRole(
-                Role.valueOf(request.role().toUpperCase())
-        );
+        // FIX: prevent NULL crash
+        String role = request.role();
+        if (role == null || role.isBlank()) {
+            role = "USER";
+        }
+
+        user.setRole(Role.valueOf(role.toUpperCase()));
 
         userRepository.save(user);
 
@@ -57,9 +56,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public Object login(
-            @RequestBody LoginRequest request
-    ) {
+    public Object login(@RequestBody LoginRequest request) {
 
         User user = userRepository.findByEmail(request.email())
                 .orElse(null);
@@ -68,15 +65,11 @@ public class AuthController {
             return "Invalid Email";
         }
 
-        if (!passwordEncoder.matches(
-                request.password(),
-                user.getPassword()
-        )) {
+        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
             return "Invalid Password";
         }
 
-        String token =
-                jwtUtil.generateToken(user.getEmail());
+        String token = jwtUtil.generateToken(user.getEmail());
 
         return Map.of(
                 "token", token,
