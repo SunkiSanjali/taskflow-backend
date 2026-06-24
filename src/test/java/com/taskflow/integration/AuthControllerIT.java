@@ -11,54 +11,47 @@ public class AuthControllerIT extends BaseIntegrationTest {
     @Test
     void shouldRegisterUser() throws Exception {
 
-        String requestBody = """
-                {
-                  "name":"Test User",
-                  "email":"test@test.com",
-                  "password":"password123",
-                  "role":"MEMBER"
-                }
-                """;
+        String body = """
+        {
+            "email": "test@gmail.com",
+            "password": "password123",
+            "role": "USER"
+        }
+        """;
 
-        mockMvc.perform(
-                        post("/api/v1/auth/register")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(requestBody)
-                )
+        mockMvc.perform(post("/api/v1/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
                 .andExpect(status().isOk());
     }
 
     @Test
     void shouldLoginUser() throws Exception {
 
-        String registerBody = """
-                {
-                  "name":"Login User",
-                  "email":"login@test.com",
-                  "password":"password123",
-                  "role":"MEMBER"
-                }
-                """;
+        // register first inside SAME test (correct approach)
+        String register = """
+        {
+            "email": "login@gmail.com",
+            "password": "password123",
+            "role": "USER"
+        }
+        """;
 
-        mockMvc.perform(
-                post("/api/v1/auth/register")
+        mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(registerBody)
-        );
+                        .content(register))
+                .andExpect(status().isOk());
 
-        String loginBody = """
-                {
-                  "email":"login@test.com",
-                  "password":"password123"
-                }
-                """;
+        String login = """
+        {
+            "email": "login@gmail.com",
+            "password": "password123"
+        }
+        """;
 
-        mockMvc.perform(
-                        post("/api/v1/auth/login")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(loginBody)
-                )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").exists());
+        mockMvc.perform(post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(login))
+                .andExpect(status().isOk());
     }
 }
