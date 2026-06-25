@@ -6,6 +6,9 @@ import com.taskflow.entity.Role;
 import com.taskflow.entity.User;
 import com.taskflow.repository.UserRepository;
 import com.taskflow.security.JwtUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@Tag(name = "Authentication", description = "User registration and login APIs")
 public class AuthController {
 
     private final UserRepository userRepository;
@@ -29,6 +33,12 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
+    @Operation(
+            summary = "Register a new user",
+            description = "Creates a new user account"
+    )
+    @ApiResponse(responseCode = "200", description = "User registered successfully")
+    @ApiResponse(responseCode = "400", description = "Email already exists")
     @PostMapping("/register")
     public String register(@RequestBody RegisterRequest request) {
 
@@ -39,10 +49,8 @@ public class AuthController {
         User user = new User();
         user.setName(request.name());
         user.setEmail(request.email());
-
         user.setPassword(passwordEncoder.encode(request.password()));
 
-        // FIX: prevent NULL crash
         String role = request.role();
         if (role == null || role.isBlank()) {
             role = "USER";
@@ -55,6 +63,12 @@ public class AuthController {
         return "User Registered Successfully";
     }
 
+    @Operation(
+            summary = "Login user",
+            description = "Authenticates user and returns JWT token"
+    )
+    @ApiResponse(responseCode = "200", description = "Login successful")
+    @ApiResponse(responseCode = "401", description = "Invalid credentials")
     @PostMapping("/login")
     public Object login(@RequestBody LoginRequest request) {
 

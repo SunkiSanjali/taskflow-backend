@@ -4,6 +4,9 @@ import com.taskflow.dto.CreateTaskRequest;
 import com.taskflow.entity.Task;
 import com.taskflow.repository.TaskRepository;
 import com.taskflow.specification.TaskSpecification;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -48,6 +51,7 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
+    @Cacheable(value = "tasks", key = "#id")
     public Task getTaskById(Long id) {
 
         return taskRepository.findById(id)
@@ -55,6 +59,7 @@ public class TaskService {
                         new RuntimeException("Task not found"));
     }
 
+    @CachePut(value = "tasks", key = "#id")
     public Task updateTask(Long id, CreateTaskRequest request) {
 
         Task task = getTaskById(id);
@@ -66,6 +71,7 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
+    @CacheEvict(value = "tasks", key = "#id")
     public void deleteTask(Long id) {
 
         Task task = getTaskById(id);
