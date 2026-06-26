@@ -1,5 +1,6 @@
 package com.taskflow.config;
 
+import com.taskflow.filter.CorrelationIdFilter;
 import com.taskflow.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,11 +17,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CorrelationIdFilter correlationIdFilter;
 
     public SecurityConfig(
-            JwtAuthenticationFilter jwtAuthenticationFilter
+            JwtAuthenticationFilter jwtAuthenticationFilter,
+            CorrelationIdFilter correlationIdFilter
     ) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.correlationIdFilter = correlationIdFilter;
     }
 
     @Bean
@@ -50,6 +54,11 @@ public class SecurityConfig {
                         ).permitAll()
 
                         .anyRequest().authenticated()
+                )
+
+                .addFilterBefore(
+                        correlationIdFilter,
+                        UsernamePasswordAuthenticationFilter.class
                 )
 
                 .addFilterBefore(
