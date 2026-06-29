@@ -53,7 +53,7 @@ public class AuthController {
 
         String role = request.role();
         if (role == null || role.isBlank()) {
-            role = "USER";
+            role = "MEMBER";
         }
 
         user.setRole(Role.valueOf(role.toUpperCase()));

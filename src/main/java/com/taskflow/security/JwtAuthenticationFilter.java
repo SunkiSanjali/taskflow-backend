@@ -33,45 +33,75 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
+        System.out.println("======================================");
+        System.out.println("Incoming Request : " + request.getMethod() + " " + request.getRequestURI());
+        System.out.println("Authorization Header : " + authHeader);
 
-        // If no token → just continue filter chain
+        // If no Authorization header
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.out.println("No Bearer token found.");
             filterChain.doFilter(request, response);
             return;
         }
 
         String token = authHeader.substring(7);
+        System.out.println("JWT Token : " + token);
 
         String username;
+
         try {
             username = jwtUtil.extractUsername(token);
+            System.out.println("Username extracted from token : " + username);
         } catch (Exception e) {
+            System.out.println("Failed to extract username from token.");
+            e.printStackTrace();
             filterChain.doFilter(request, response);
             return;
         }
 
-        if (username != null &&
-                SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            UserDetails userDetails =
-                    userDetailsService.loadUserByUsername(username);
+            try {
 
-            if (jwtUtil.validateToken(token)) {
+                UserDetails userDetails =
+                        userDetailsService.loadUserByUsername(username);
 
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
+                System.out.println("User found in database : "
+                        + userDetails.getUsername());
 
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource()
-                                .buildDetails(request)
-                );
+                System.out.println("Authorities : "
+                        + userDetails.getAuthorities());
 
-                SecurityContextHolder.getContext()
-                        .setAuthentication(authToken);
+                if (jwtUtil.validateToken(token)) {
+
+                    System.out.println("JWT Token is VALID");
+
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails,
+                                    null,
+                                    userDetails.getAuthorities()
+                            );
+
+                    authToken.setDetails(
+                            new WebAuthenticationDetailsSource()
+                                    .buildDetails(request)
+                    );
+
+                    SecurityContextHolder.getContext()
+                            .setAuthentication(authToken);
+
+                    System.out.println("Authentication SUCCESSFUL");
+
+                } else {
+
+                    System.out.println("JWT Token is INVALID");
+                }
+
+            } catch (Exception e) {
+
+                System.out.println("Authentication FAILED");
+                e.printStackTrace();
             }
         }
 
